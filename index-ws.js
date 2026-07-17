@@ -1,39 +1,52 @@
-const express = require('express')
+const express = require('express');
 const server = require('http').createServer();
 const app = express();
+const PORT = 3000;
 
 app.get('/', function(req, res) {
   res.sendFile('index.html', {root: __dirname});
 });
 
 server.on('request', app);
-server.listen(3000, function() {console.log('server running on port 3000')});
 
+server.listen(PORT, function () { console.log('Listening on ' + PORT); });
 
-/** start websocket **/
-
+/** Websocket **/
 const WebSocketServer = require('ws').Server;
 
-const wss = new WebSocketServer({ server: server});
+const wss = new WebSocketServer({ server: server });
 
 wss.on('connection', function connection(ws) {
-  const numclients = wss.clients.size;
+  const numClients = wss.clients.size;
 
-  console.log(numclients, 'clients connected')
+  console.log('clients connected: ', numClients);
 
-  wss.broadcast(`current visitors ${numclients}`);
+  wss.broadcast(`Current visitors: ${numClients}`);
 
-  if (ws.readyState == ws.OPEN) {
-    ws.send("welcome to my server")
+  if (ws.readyState === ws.OPEN) {
+    ws.send('welcome!');
   }
 
   ws.on('close', function close() {
-    console.log('client disconnect');
-  })
+    wss.broadcast(`Current visitors: ${wss.clients.size}`);
+    console.log('A client has disconnected');
+  });
 
-})
+  ws.on('error', function error() {
+    //
+  });
+});
+
+/**
+ * Broadcast data to all connected clients
+ * @param  {Object} data
+ * @void
+ */
 wss.broadcast = function broadcast(data) {
-  wss.clients.forEach(client => {
-    client.send(data)
-  })
-}
+  console.log('Broadcasting: ', data);
+  wss.clients.forEach(function each(client) {
+    client.send(data);
+  });
+};
+/** End Websocket **/
+
