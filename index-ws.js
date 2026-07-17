@@ -21,7 +21,7 @@ wss.on('connection', function connection(ws) {
 
   console.log(numclients, 'clients connected')
 
-  wss.broadcast('current visitors ', numclients);
+  wss.broadcast(`current visitors ${numclients}`);
 
   if (ws.readyState == ws.OPEN) {
     ws.send("welcome to my server")
