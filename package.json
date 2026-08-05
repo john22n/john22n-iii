@@ -7,6 +7,9 @@
     "start": "node index-ws.js",
     "test": "node --test"
   },
+  "engines": {
+    "node": ">=24"
+  },
   "author": "John Noriega",
   "license": "ISC",
   "dependencies": {

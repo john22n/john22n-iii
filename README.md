@@ -21,7 +21,7 @@ The deliberately small stack keeps deployment and operations proportional to a p
 
 ## Run locally
 
-Requires Node.js 18 or newer.
+Requires Node.js 24 or newer. The repository's `.node-version` is the source of truth for development and deployment.
 
 ```sh
 npm ci
