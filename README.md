@@ -19,7 +19,7 @@ Enter the same value in the form's **Publish key** field. Reading posts remains 
 
 ## Production security
 
-Run the public service with `NODE_ENV=production`; the server refuses to start without a `BLOG_ADMIN_KEY` of at least 32 characters:
+Run the public service with `NODE_ENV=production`; the server refuses to start without a `BLOG_ADMIN_KEY`:
 
 ```sh
 NODE_ENV=production BLOG_ADMIN_KEY="your-generated-secret" npm start

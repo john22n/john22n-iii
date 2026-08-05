@@ -10,10 +10,6 @@ const PORT = Number(process.env.PORT) || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 const adminKey = process.env.BLOG_ADMIN_KEY || '';
 
-if (adminKey && Buffer.byteLength(adminKey) < 32) {
-  throw new Error('BLOG_ADMIN_KEY must be at least 32 characters long.');
-}
-
 if (isProduction && !adminKey) {
   throw new Error('BLOG_ADMIN_KEY is required when NODE_ENV=production.');
 }
