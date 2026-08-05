@@ -1,13 +1,13 @@
 {
-  "name": "app",
+  "name": "john-noriega-portfolio",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "John Noriega's software engineering portfolio and field notes.",
+  "main": "index-ws.js",
   "scripts": {
     "start": "node index-ws.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test"
   },
-  "author": "",
+  "author": "John Noriega",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^17.4.2",

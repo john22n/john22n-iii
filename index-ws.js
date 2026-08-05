@@ -20,7 +20,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'sha256-qqF6FsVzse4XjXzPd4kaApxes9tdAHd2Otkk1dK4wqQ='"],
+      scriptSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       connectSrc: ["'self'", 'ws:', 'wss:'],
@@ -46,9 +46,17 @@ app.use(rateLimit({
 }));
 
 app.use(express.json({ limit: '100kb' }));
+app.use('/assets', express.static(path.join(__dirname, 'assets'), {
+  fallthrough: false,
+  maxAge: isProduction ? '1d' : 0,
+}));
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/favicon.ico', function(req, res) {
+  res.status(204).end();
 });
 
 app.use((error, req, res, next) => {
@@ -60,7 +68,9 @@ app.use((error, req, res, next) => {
 
 server.on('request', app);
 
-server.listen(PORT, function () { console.log('Listening on ' + PORT); });
+if (require.main === module) {
+  server.listen(PORT, function () { console.log('Listening on ' + PORT); });
+}
 
 server.headersTimeout = 10000;
 server.requestTimeout = 15000;
@@ -81,8 +91,10 @@ function shutdown() {
   });
 }
 
-process.on('SIGINT', shutdown);
-process.on('SIGTERM', shutdown);
+if (require.main === module) {
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
+}
 
 /** Websocket **/
 const WebSocketServer = require('ws').Server;
@@ -145,7 +157,8 @@ wss.broadcast = function broadcast(data) {
 /** database start **/
 
 const sqlite = require('sqlite3')
-const db = new sqlite.Database(path.join(__dirname, 'blog.db'));
+const dbPath = process.env.BLOG_DB_PATH || path.join(__dirname, 'blog.db');
+const db = new sqlite.Database(dbPath);
 
 const starterPosts = [
   {
@@ -165,25 +178,40 @@ const starterPosts = [
   }
 ];
 
-db.serialize(() => {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS posts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      category TEXT NOT NULL,
-      content TEXT NOT NULL,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-  db.get('SELECT COUNT(*) AS count FROM posts', (error, row) => {
-    if (error || row.count > 0) return;
-
-    const insert = db.prepare('INSERT INTO posts (title, category, content) VALUES (?, ?, ?)');
-    starterPosts.slice().reverse().forEach((post) => {
-      insert.run(post.title, post.category, post.content);
+const databaseReady = new Promise((resolve, reject) => {
+  db.serialize(() => {
+    db.run(`
+      CREATE TABLE IF NOT EXISTS posts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        category TEXT NOT NULL,
+        content TEXT NOT NULL,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      )
+    `, (createError) => {
+      if (createError) reject(createError);
     });
-    insert.finalize();
+    db.get('SELECT COUNT(*) AS count FROM posts', (error, row) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      if (row.count > 0) {
+        resolve();
+        return;
+      }
+
+      const insert = db.prepare('INSERT INTO posts (title, category, content) VALUES (?, ?, ?)');
+      starterPosts.slice().reverse().forEach((post) => {
+        insert.run(post.title, post.category, post.content);
+      });
+      insert.finalize((insertError) => insertError ? reject(insertError) : resolve());
+    });
   });
+});
+
+app.use('/api', function(req, res, next) {
+  databaseReady.then(() => next(), next);
 });
 
 app.get('/api/posts', function(req, res) {
@@ -191,6 +219,10 @@ app.get('/api/posts', function(req, res) {
     if (error) return res.status(500).json({ error: 'Could not load posts.' });
     res.json(posts);
   });
+});
+
+app.get('/api/health', function(req, res) {
+  res.json({ status: 'ok' });
 });
 
 const adminLimiter = rateLimit({
@@ -268,3 +300,5 @@ function shutdownDB() {
     if (error) console.error('Could not close the database cleanly.');
   });
 }
+
+module.exports = { server, db, wss, databaseReady };

@@ -5,860 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="John Noriega is a full-stack engineer building thoughtful digital experiences."
+      content="John Noriega is a Denver-based software engineer with 8+ years of experience building fintech platforms, payment workflows, real-time applications, and AI-enabled systems."
     />
-    <title>John Noriega — Full-Stack Engineer</title>
+    <meta property="og:title" content="John Noriega — Software Engineer" />
+    <meta
+      property="og:description"
+      content="8+ years building fintech platforms, payment workflows, real-time applications, and AI-enabled systems."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#171714" />
+    <title>John Noriega — Software Engineer | Fintech &amp; Real-Time Systems</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <style>
-      :root {
-        --ink: #171714;
-        --paper: #eee9df;
-        --acid: #d9ff43;
-        --orange: #ff5c35;
-        --line: rgba(23, 23, 20, 0.22);
-        --display: "Syne", sans-serif;
-        --mono: "DM Mono", monospace;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        margin: 0;
-        color: var(--ink);
-        background-color: var(--paper);
-        background-image: radial-gradient(rgba(23, 23, 20, 0.09) 0.7px, transparent 0.7px);
-        background-size: 5px 5px;
-        font-family: var(--display);
-        overflow-x: hidden;
-      }
-
-      body::before {
-        position: fixed;
-        inset: 0;
-        z-index: 10;
-        border: 7px solid var(--ink);
-        pointer-events: none;
-        content: "";
-      }
-
-      a {
-        color: inherit;
-      }
-
-      .skip-link {
-        position: fixed;
-        z-index: 20;
-        top: -100px;
-        left: 1rem;
-        padding: 0.75rem 1rem;
-        color: var(--paper);
-        background: var(--ink);
-        font-family: var(--mono);
-      }
-
-      .skip-link:focus {
-        top: 1rem;
-      }
-
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 86px;
-        padding: 0 4vw;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .logo {
-        font-size: 1.25rem;
-        font-weight: 800;
-        letter-spacing: -0.06em;
-        text-decoration: none;
-      }
-
-      .logo span {
-        color: var(--orange);
-      }
-
-      nav {
-        display: flex;
-        gap: clamp(1rem, 3vw, 3rem);
-      }
-
-      nav a,
-      .eyebrow,
-      .status,
-      .section-number,
-      .project-meta,
-      footer {
-        font-family: var(--mono);
-        font-size: 0.73rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-      }
-
-      nav a {
-        position: relative;
-        text-decoration: none;
-      }
-
-      nav a::after {
-        position: absolute;
-        right: 0;
-        bottom: -5px;
-        left: 0;
-        height: 2px;
-        background: var(--orange);
-        transform: scaleX(0);
-        transform-origin: right;
-        transition: transform 220ms ease;
-        content: "";
-      }
-
-      nav a:hover::after,
-      nav a:focus-visible::after {
-        transform: scaleX(1);
-        transform-origin: left;
-      }
-
-      .hero {
-        position: relative;
-        display: grid;
-        grid-template-columns: 1fr minmax(220px, 31vw);
-        min-height: calc(100svh - 86px);
-        border-bottom: 1px solid var(--line);
-      }
-
-      .hero-copy {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: clamp(3rem, 8vw, 7rem) 4vw 3rem;
-      }
-
-      .eyebrow {
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
-      }
-
-      .eyebrow::before {
-        width: 2.5rem;
-        height: 1px;
-        background: currentColor;
-        content: "";
-      }
-
-      h1 {
-        max-width: 11ch;
-        margin: 1.4rem 0 2rem;
-        font-size: clamp(4.3rem, 11.5vw, 10rem);
-        font-weight: 700;
-        line-height: 0.77;
-        letter-spacing: -0.085em;
-      }
-
-      h1 span {
-        display: block;
-        color: var(--orange);
-        font-weight: 400;
-        text-indent: 0.45em;
-      }
-
-      .hero-bottom {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 2rem;
-      }
-
-      .intro {
-        max-width: 33rem;
-        margin: 0;
-        font-size: clamp(1.05rem, 1.6vw, 1.4rem);
-        line-height: 1.45;
-      }
-
-      .status {
-        display: flex;
-        flex: none;
-        align-items: center;
-        gap: 0.65rem;
-      }
-
-      .status-dot {
-        width: 9px;
-        height: 9px;
-        border-radius: 50%;
-        background: var(--orange);
-        box-shadow: 0 0 0 5px rgba(255, 92, 53, 0.15);
-      }
-
-      .status.connected .status-dot {
-        background: #36a75c;
-        box-shadow: 0 0 0 5px rgba(54, 167, 92, 0.15);
-        animation: pulse 1.8s infinite;
-      }
-
-      .hero-art {
-        position: relative;
-        min-height: 100%;
-        border-left: 1px solid var(--line);
-        background: var(--acid);
-        overflow: hidden;
-      }
-
-      .hero-art::before {
-        position: absolute;
-        top: 9%;
-        right: -41%;
-        width: 119%;
-        aspect-ratio: 1;
-        border: clamp(45px, 7vw, 100px) solid var(--ink);
-        border-radius: 50%;
-        content: "";
-      }
-
-      .hero-art::after {
-        position: absolute;
-        right: 13%;
-        bottom: 9%;
-        width: 33%;
-        aspect-ratio: 1;
-        background: var(--orange);
-        transform: rotate(15deg);
-        box-shadow: 1.6rem 1.6rem 0 var(--paper);
-        content: "";
-      }
-
-      .vertical-type {
-        position: absolute;
-        z-index: 1;
-        bottom: 2rem;
-        left: 1.5rem;
-        font-family: var(--mono);
-        font-size: 0.68rem;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
-      }
-
-      .marquee {
-        padding: 1rem 0;
-        color: var(--paper);
-        background: var(--ink);
-        font-family: var(--mono);
-        font-size: 0.78rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        white-space: nowrap;
-        overflow: hidden;
-      }
-
-      .marquee-track {
-        display: inline-block;
-        min-width: 200%;
-        animation: scroll 22s linear infinite;
-      }
-
-      .marquee span {
-        margin-right: 3rem;
-      }
-
-      .marquee b {
-        color: var(--acid);
-      }
-
-      section:not(.hero) {
-        padding: clamp(5rem, 10vw, 9rem) 4vw;
-      }
-
-      .section-heading {
-        display: grid;
-        grid-template-columns: minmax(8rem, 1fr) 3fr;
-        gap: 2rem;
-        margin-bottom: clamp(4rem, 8vw, 7rem);
-      }
-
-      .section-number {
-        padding-top: 0.8rem;
-        border-top: 1px solid var(--ink);
-      }
-
-      h2 {
-        max-width: 16ch;
-        margin: 0;
-        font-size: clamp(2.6rem, 6vw, 6.5rem);
-        font-weight: 500;
-        line-height: 0.95;
-        letter-spacing: -0.065em;
-      }
-
-      .about-grid {
-        display: grid;
-        grid-template-columns: 1fr 2fr 1fr;
-        gap: 3vw;
-        align-items: start;
-      }
-
-      .about-grid p {
-        margin: 0;
-      }
-
-      .about-lead {
-        font-size: clamp(1.5rem, 3vw, 2.8rem);
-        line-height: 1.15;
-        letter-spacing: -0.035em;
-      }
-
-      .about-body {
-        font-size: 1rem;
-        line-height: 1.7;
-      }
-
-      .principles {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        font-family: var(--mono);
-        font-size: 0.75rem;
-        text-transform: uppercase;
-      }
-
-      .principles li {
-        padding: 0.85rem 0;
-        border-top: 1px solid var(--line);
-      }
-
-      .principles li:last-child {
-        border-bottom: 1px solid var(--line);
-      }
-
-      #work {
-        color: var(--paper);
-        background: var(--ink);
-      }
-
-      #work .section-number {
-        border-color: var(--paper);
-      }
-
-      .project-list {
-        border-top: 1px solid rgba(238, 233, 223, 0.35);
-      }
-
-      .project {
-        display: grid;
-        grid-template-columns: 4rem 1fr auto;
-        gap: 2rem;
-        align-items: center;
-        padding: clamp(1.7rem, 4vw, 3.2rem) 0;
-        border-bottom: 1px solid rgba(238, 233, 223, 0.35);
-        transition: color 200ms ease, padding 250ms ease;
-      }
-
-      .project:hover {
-        padding-right: 1.5rem;
-        padding-left: 1.5rem;
-        color: var(--ink);
-        background: var(--acid);
-      }
-
-      .project-index {
-        font-family: var(--mono);
-        font-size: 0.7rem;
-      }
-
-      .project h3 {
-        margin: 0;
-        font-size: clamp(1.8rem, 4vw, 4rem);
-        font-weight: 500;
-        letter-spacing: -0.055em;
-      }
-
-      .project-meta {
-        text-align: right;
-      }
-
-      #blog {
-        background: var(--acid);
-      }
-
-      .blog-tools {
-        margin-bottom: 2rem;
-        border: 1px solid var(--ink);
-        background: var(--ink);
-        color: var(--paper);
-      }
-
-      .blog-tools summary {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1.2rem 1.5rem;
-        cursor: pointer;
-        font-family: var(--mono);
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
-        list-style: none;
-        text-transform: uppercase;
-      }
-
-      .blog-tools summary::-webkit-details-marker {
-        display: none;
-      }
-
-      .blog-tools summary::after {
-        color: var(--acid);
-        font-family: var(--display);
-        font-size: 1.4rem;
-        content: "+";
-      }
-
-      .blog-tools[open] summary::after {
-        content: "−";
-      }
-
-      .post-form {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 1rem;
-        padding: clamp(1.5rem, 3vw, 3rem);
-        border-top: 1px solid rgba(238, 233, 223, 0.35);
-      }
-
-      .form-field {
-        display: grid;
-        gap: 0.5rem;
-        font-family: var(--mono);
-        font-size: 0.68rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .form-field-wide {
-        grid-column: 1 / -1;
-      }
-
-      .form-field input,
-      .form-field textarea {
-        width: 100%;
-        border: 1px solid rgba(238, 233, 223, 0.45);
-        border-radius: 0;
-        padding: 0.9rem;
-        color: var(--paper);
-        background: transparent;
-        font: 1rem/1.5 var(--display);
-      }
-
-      .form-field textarea {
-        min-height: 13rem;
-        resize: vertical;
-      }
-
-      .form-field input:focus,
-      .form-field textarea:focus {
-        border-color: var(--acid);
-        outline: 2px solid var(--acid);
-        outline-offset: 2px;
-      }
-
-      .publish-row {
-        display: flex;
-        grid-column: 1 / -1;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-      }
-
-      .publish-button {
-        border: 0;
-        padding: 1rem 1.4rem;
-        color: var(--ink);
-        background: var(--acid);
-        cursor: pointer;
-        font: 600 0.75rem var(--mono);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .publish-button:hover,
-      .publish-button:focus-visible {
-        background: var(--orange);
-      }
-
-      .publish-button:disabled {
-        cursor: wait;
-        opacity: 0.6;
-      }
-
-      .form-status {
-        margin: 0;
-        font-family: var(--mono);
-        font-size: 0.75rem;
-      }
-
-      .blog-empty {
-        grid-column: 1 / -1;
-        padding: 3rem;
-        border-right: 1px solid var(--ink);
-        border-bottom: 1px solid var(--ink);
-        font-family: var(--mono);
-      }
-
-      .blog-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        border-top: 1px solid var(--ink);
-        border-left: 1px solid var(--ink);
-      }
-
-      .post {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        border-right: 1px solid var(--ink);
-        border-bottom: 1px solid var(--ink);
-        background: var(--paper);
-      }
-
-      .post:first-child {
-        grid-row: span 2;
-      }
-
-      .post-summary {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        min-height: 20rem;
-        padding: clamp(1.5rem, 3vw, 3rem);
-        cursor: pointer;
-        list-style: none;
-        transition: background 180ms ease, color 180ms ease;
-      }
-
-      .post-summary::-webkit-details-marker {
-        display: none;
-      }
-
-      .post-summary:hover,
-      .post-summary:focus-visible,
-      .post[open] .post-summary {
-        color: var(--paper);
-        background: var(--orange);
-        outline: 0;
-      }
-
-      .post-number,
-      .post-meta,
-      .post-action {
-        font-family: var(--mono);
-        font-size: 0.7rem;
-        letter-spacing: 0.09em;
-        text-transform: uppercase;
-      }
-
-      .post-number {
-        display: block;
-        margin-bottom: clamp(3rem, 7vw, 7rem);
-      }
-
-      .post:not(:first-child) .post-number {
-        margin-bottom: 2rem;
-      }
-
-      .post h3 {
-        max-width: 14ch;
-        margin: 0 0 1rem;
-        font-size: clamp(1.8rem, 4vw, 4.2rem);
-        font-weight: 600;
-        line-height: 0.96;
-        letter-spacing: -0.06em;
-      }
-
-      .post:not(:first-child) h3 {
-        font-size: clamp(1.6rem, 2.7vw, 2.8rem);
-      }
-
-      .post-meta {
-        margin-top: auto;
-        padding-top: 2rem;
-      }
-
-      .post-action {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid currentColor;
-      }
-
-      .post-action::after {
-        font-family: var(--display);
-        font-size: 1.25rem;
-        content: "+";
-      }
-
-      .post[open] .post-action::after {
-        content: "−";
-      }
-
-      .post-body {
-        padding: clamp(1.5rem, 3vw, 3rem);
-        border-top: 1px solid var(--ink);
-        background: var(--paper);
-        font-family: var(--mono);
-        font-size: 0.88rem;
-        line-height: 1.8;
-      }
-
-      .post-body p {
-        max-width: 66ch;
-        margin: 0 0 1.25rem;
-      }
-
-      .post-body p:last-child {
-        margin-bottom: 0;
-      }
-
-      .post-delete-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        margin-top: 2rem;
-        padding-top: 1rem;
-        border-top: 1px solid var(--line);
-      }
-
-      .delete-button {
-        border: 0;
-        padding: 0;
-        color: var(--orange);
-        background: transparent;
-        cursor: pointer;
-        font: 500 0.7rem var(--mono);
-        letter-spacing: 0.09em;
-        text-transform: uppercase;
-      }
-
-      .delete-button:hover,
-      .delete-button:focus-visible {
-        color: var(--ink);
-        text-decoration: underline;
-        text-underline-offset: 0.3rem;
-      }
-
-      .delete-button:disabled {
-        cursor: wait;
-        opacity: 0.55;
-      }
-
-      .delete-status {
-        font-size: 0.7rem;
-        text-align: right;
-      }
-
-      .contact {
-        position: relative;
-        min-height: 75vh;
-        background: var(--orange);
-        overflow: hidden;
-      }
-
-      .contact::after {
-        position: absolute;
-        right: -5vw;
-        bottom: -22vw;
-        width: 43vw;
-        aspect-ratio: 1;
-        border: 6vw solid var(--acid);
-        border-radius: 50%;
-        content: "";
-      }
-
-      .contact .section-heading {
-        position: relative;
-        z-index: 1;
-      }
-
-      .contact-links {
-        position: relative;
-        z-index: 1;
-        display: grid;
-        max-width: 58rem;
-        border-top: 1px solid var(--ink);
-      }
-
-      .contact-link {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 1rem 0;
-        border-bottom: 1px solid var(--ink);
-        font-size: clamp(1.3rem, 3vw, 2.6rem);
-        font-weight: 600;
-        letter-spacing: -0.04em;
-        text-decoration: none;
-        transition: padding 200ms ease, background 200ms ease;
-      }
-
-      .contact-link:hover,
-      .contact-link:focus-visible {
-        padding-right: 1rem;
-        padding-left: 1rem;
-        background: var(--acid);
-        outline: 0;
-      }
-
-      .contact-link span {
-        transition: transform 200ms ease;
-      }
-
-      .contact-link:hover span {
-        transform: translate(0.35rem, -0.35rem);
-      }
-
-      footer {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 1.5rem 4vw 2rem;
-        color: var(--paper);
-        background: var(--ink);
-      }
-
-      .reveal {
-        opacity: 0;
-        transform: translateY(35px);
-        transition: opacity 700ms ease, transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
-      }
-
-      .reveal.visible {
-        opacity: 1;
-        transform: none;
-      }
-
-      @keyframes pulse {
-        50% { transform: scale(0.72); }
-      }
-
-      @keyframes scroll {
-        to { transform: translateX(-50%); }
-      }
-
-      @media (max-width: 760px) {
-        body::before {
-          border-width: 4px;
-        }
-
-        header {
-          min-height: 72px;
-        }
-
-        nav a:not(:last-child) {
-          display: none;
-        }
-
-        .hero {
-          grid-template-columns: 1fr;
-          min-height: auto;
-        }
-
-        .hero-copy {
-          min-height: 72svh;
-          padding-top: 4rem;
-        }
-
-        h1 {
-          font-size: clamp(4rem, 21vw, 7rem);
-        }
-
-        .hero-bottom {
-          display: grid;
-        }
-
-        .hero-art {
-          min-height: 38vh;
-          border-top: 1px solid var(--line);
-          border-left: 0;
-        }
-
-        .section-heading {
-          grid-template-columns: 1fr;
-          margin-bottom: 3rem;
-        }
-
-        .section-number {
-          max-width: 8rem;
-        }
-
-        .about-grid {
-          grid-template-columns: 1fr;
-          gap: 2.5rem;
-        }
-
-        .project {
-          grid-template-columns: 2rem 1fr;
-          gap: 1rem;
-        }
-
-        .project-meta {
-          grid-column: 2;
-          text-align: left;
-        }
-
-        .blog-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .post-form {
-          grid-template-columns: 1fr;
-        }
-
-        .form-field-wide,
-        .publish-row {
-          grid-column: 1;
-        }
-
-        .post:first-child {
-          grid-row: auto;
-        }
-
-        .post-summary,
-        .post:first-child .post-summary {
-          min-height: 22rem;
-        }
-
-        footer {
-          flex-direction: column;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        html { scroll-behavior: auto; }
-        *, *::before, *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-        }
-        .reveal { opacity: 1; transform: none; }
-      }
-    </style>
+    <link rel="stylesheet" href="/assets/site.css" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -866,9 +29,10 @@
     <header>
       <a class="logo" href="#top" aria-label="John Noriega, home">JN<span>/</span></a>
       <nav aria-label="Main navigation">
+        <a href="#work">Work</a>
         <a href="#about">About</a>
-        <a href="#work">Focus</a>
         <a href="#blog">Writing</a>
+        <a href="/assets/john-noriega-resume.pdf" target="_blank">Résumé</a>
         <a href="#contact">Connect</a>
       </nav>
     </header>
@@ -877,70 +41,122 @@
       <section class="hero" id="top">
         <div class="hero-copy">
           <div>
-            <p class="eyebrow">Full-stack engineer</p>
-            <h1>John <span>Noriega.</span></h1>
+            <p class="eyebrow">John Noriega / Software engineer</p>
+            <h1>Systems that <span>move.</span></h1>
           </div>
           <div class="hero-bottom">
-            <p class="intro">
-              I build useful, expressive software from the server to the screen—where clear thinking meets careful craft.
-            </p>
-            <div class="status" id="live-status" aria-live="polite">
+            <div>
+              <p class="intro">
+                I bring 8+ years of experience to fintech platforms, payment workflows, real-time applications, and AI-enabled business systems—from durable services to the interfaces people trust.
+              </p>
+              <div class="hero-actions">
+                <a class="button-link" href="#work">View selected work ↓</a>
+                <a class="button-link secondary" href="/assets/john-noriega-resume.pdf" target="_blank">Download résumé ↗</a>
+              </div>
+            </div>
+            <div class="status">
               <span class="status-dot" aria-hidden="true"></span>
-              <span id="status-text">Site is live</span>
+              <span>Denver, CO</span>
             </div>
           </div>
         </div>
         <div class="hero-art" aria-hidden="true">
-          <span class="vertical-type">Code / systems / interfaces</span>
+          <span class="vertical-type">Payments / platforms / product</span>
+        </div>
+      </section>
+
+      <section class="credibility" aria-label="Career highlights">
+        <div class="proof-point">
+          <strong class="proof-value">8+</strong>
+          <span class="proof-label">Years building production software</span>
+        </div>
+        <div class="proof-point">
+          <strong class="proof-value">$1M+</strong>
+          <span class="proof-label">Sales attributed to an AI-enabled platform</span>
+        </div>
+        <div class="proof-point">
+          <strong class="proof-value">Fintech</strong>
+          <span class="proof-label">Banking, payments &amp; wealth management</span>
+        </div>
+        <div class="proof-point">
+          <strong class="proof-value">Full stack</strong>
+          <span class="proof-label">Product interfaces through platform services</span>
         </div>
       </section>
 
       <div class="marquee" aria-hidden="true">
         <div class="marquee-track">
-          <span>Frontend <b>✦</b> Backend <b>✦</b> WebSockets <b>✦</b> Databases <b>✦</b> Product thinking <b>✦</b></span>
-          <span>Frontend <b>✦</b> Backend <b>✦</b> WebSockets <b>✦</b> Databases <b>✦</b> Product thinking <b>✦</b></span>
+          <span>TypeScript <b>✦</b> React <b>✦</b> Node.js <b>✦</b> Python <b>✦</b> PostgreSQL <b>✦</b> GraphQL <b>✦</b> WebSockets <b>✦</b></span>
+          <span>TypeScript <b>✦</b> React <b>✦</b> Node.js <b>✦</b> Python <b>✦</b> PostgreSQL <b>✦</b> GraphQL <b>✦</b> WebSockets <b>✦</b></span>
         </div>
       </div>
 
       <section id="about">
         <div class="section-heading reveal">
           <span class="section-number">01 / About</span>
-          <h2>Building the whole thing, not just the shiny part.</h2>
+          <h2>Engineering across boundaries.</h2>
         </div>
         <div class="about-grid reveal">
-          <p class="about-lead">I’m John, a full-stack engineer interested in how robust systems become effortless experiences.</p>
+          <p class="about-lead">I build software where product experience and system behavior have to work as one.</p>
           <p class="about-body">
-            My work moves across the stack: shaping interfaces, designing server behavior, connecting real-time data, and making the pieces work as one. I care about direct solutions, readable code, and details that make software feel considered.
+            My experience spans enterprise transaction systems, PostgreSQL-backed banking services, real-time interfaces, and an AI sales platform integrated with telephony and CRM systems. I focus on making complex workflows reliable and understandable through sound APIs, useful validation, observable services, automated tests, and careful interface design.
           </p>
           <ul class="principles" aria-label="Working principles">
-            <li>Clarity over cleverness</li>
-            <li>Craft at every layer</li>
-            <li>Build, test, improve</li>
-            <li>Always stay curious</li>
+            <li>Own the full outcome</li>
+            <li>Make tradeoffs explicit</li>
+            <li>Design for failure</li>
+            <li>Leave systems clearer</li>
           </ul>
         </div>
       </section>
 
       <section id="work">
         <div class="section-heading reveal">
-          <span class="section-number">02 / Focus</span>
-          <h2>Where I like to make an impact.</h2>
+          <span class="section-number">02 / Selected work</span>
+          <h2>Complex systems. Concrete outcomes.</h2>
         </div>
         <div class="project-list reveal">
           <article class="project">
-            <span class="project-index">001</span>
-            <h3>Interface engineering</h3>
-            <span class="project-meta">Responsive / Accessible</span>
+            <div>
+              <span class="project-index">001 / Independent consulting</span>
+              <h3>AI sales intake &amp; routing</h3>
+              <span class="project-company">Billboard Source</span>
+            </div>
+            <div class="project-story">
+              <p>Designed and launched an AI-powered sales intake and call-routing platform that connected customer conversations, phone workflows, and CRM data into one operating system for the business.</p>
+            </div>
+            <div class="project-proof">
+              <p class="project-outcome">More than $1 million in attributable sales.</p>
+              <span class="project-meta">OpenAI / Twilio / Nutshell CRM / Next.js / TypeScript / PostgreSQL / Drizzle / Vercel</span>
+            </div>
           </article>
           <article class="project">
-            <span class="project-index">002</span>
-            <h3>Server-side systems</h3>
-            <span class="project-meta">Node / APIs</span>
+            <div>
+              <span class="project-index">002 / Nov 2019–Nov 2025</span>
+              <h3>Enterprise payments &amp; wealth</h3>
+              <span class="project-company">JPMorgan Chase · Software engineer</span>
+            </div>
+            <div class="project-story">
+              <p>Built and modernized enterprise payment and wealth-management applications spanning real-time transaction management, portfolio rebalancing, FactSet data validation, advanced search, and automated delivery pipelines.</p>
+            </div>
+            <div class="project-proof">
+              <p class="project-outcome">Six years delivering high-stakes financial workflows.</p>
+              <span class="project-meta">React / TypeScript / GraphQL / WebSockets / ag-Grid / Microfrontends / CI/CD</span>
+            </div>
           </article>
           <article class="project">
-            <span class="project-index">003</span>
-            <h3>Real-time experiences</h3>
-            <span class="project-meta">WebSockets / Data</span>
+            <div>
+              <span class="project-index">003 / 2025–2026</span>
+              <h3>Real-time banking services</h3>
+              <span class="project-company">Koxa Corp · Software engineer</span>
+            </div>
+            <div class="project-story">
+              <p>Built and maintained TypeScript and Node.js platform services and PostgreSQL-backed REST APIs for real-time payments, with an emphasis on predictable integrations and production reliability.</p>
+            </div>
+            <div class="project-proof">
+              <p class="project-outcome">Improved reliability at every service boundary.</p>
+              <span class="project-meta">Schema validation / Standardized errors / Structured logging / Automated tests / Service integrations</span>
+            </div>
           </article>
         </div>
       </section>
@@ -948,33 +164,8 @@
       <section id="blog">
         <div class="section-heading reveal">
           <span class="section-number">03 / Field notes</span>
-          <h2>Ideas from inside the build.</h2>
+          <h2>Decisions behind the software.</h2>
         </div>
-        <details class="blog-tools reveal">
-          <summary>Write a new field note</summary>
-          <form class="post-form" id="post-form">
-            <label class="form-field">
-              Title
-              <input name="title" maxlength="120" required />
-            </label>
-            <label class="form-field">
-              Category
-              <input name="category" maxlength="40" placeholder="Engineering" required />
-            </label>
-            <label class="form-field form-field-wide">
-              Post
-              <textarea name="content" maxlength="20000" placeholder="Write your note here. Leave a blank line between paragraphs." required></textarea>
-            </label>
-            <label class="form-field form-field-wide">
-              Publish key (only required when BLOG_ADMIN_KEY is configured)
-              <input name="publishKey" type="password" autocomplete="current-password" />
-            </label>
-            <div class="publish-row">
-              <p class="form-status" id="form-status" role="status"></p>
-              <button class="publish-button" type="submit">Publish note ↗</button>
-            </div>
-          </form>
-        </details>
         <div class="blog-grid reveal" id="blog-posts" aria-live="polite">
           <p class="blog-empty">Loading field notes…</p>
         </div>
@@ -983,8 +174,9 @@
       <section class="contact" id="contact">
         <div class="section-heading reveal">
           <span class="section-number">04 / Connect</span>
-          <h2>Have a good problem to solve?</h2>
+          <h2>Let’s build something consequential.</h2>
         </div>
+        <p class="contact-note reveal">I’m interested in senior software engineering roles where I can own product-facing systems across the stack, strengthen engineering foundations, and help teams ship reliable software.</p>
         <div class="contact-links reveal">
           <a class="contact-link" href="mailto:johnnoriega22@icloud.com">
             johnnoriega22@icloud.com <span aria-hidden="true">↗</span>
@@ -995,190 +187,18 @@
           <a class="contact-link" href="https://github.com/john22n" target="_blank" rel="noreferrer">
             Find me on GitHub <span aria-hidden="true">↗</span>
           </a>
+          <a class="contact-link" href="/assets/john-noriega-resume.pdf" target="_blank">
+            Download my résumé <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </section>
     </main>
 
     <footer>
       <span>© <span id="year"></span> John Noriega</span>
-      <span>Designed &amp; built with intention</span>
+      <span>Denver, Colorado / Built from first principles</span>
     </footer>
 
-    <script>
-      document.getElementById("year").textContent = new Date().getFullYear();
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("visible");
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.14 },
-      );
-
-      document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
-
-      const postList = document.getElementById("blog-posts");
-      const postForm = document.getElementById("post-form");
-      const formStatus = document.getElementById("form-status");
-
-      function renderPosts(posts) {
-        postList.replaceChildren();
-
-        if (!posts.length) {
-          const empty = document.createElement("p");
-          empty.className = "blog-empty";
-          empty.textContent = "No field notes yet.";
-          postList.append(empty);
-          return;
-        }
-
-        posts.forEach((post, index) => {
-          const details = document.createElement("details");
-          details.className = "post";
-
-          const summary = document.createElement("summary");
-          summary.className = "post-summary";
-
-          const number = document.createElement("span");
-          number.className = "post-number";
-          number.textContent = `Note ${String(posts.length - index).padStart(3, "0")}`;
-
-          const title = document.createElement("h3");
-          title.textContent = post.title;
-
-          const wordCount = post.content.trim().split(/\s+/).length;
-          const meta = document.createElement("span");
-          meta.className = "post-meta";
-          meta.textContent = `${post.category} / ${Math.max(1, Math.ceil(wordCount / 200))} min read`;
-
-          const action = document.createElement("span");
-          action.className = "post-action";
-          action.textContent = "Read note";
-
-          const body = document.createElement("div");
-          body.className = "post-body";
-          post.content.split(/\n\s*\n/).forEach((paragraphText) => {
-            const paragraph = document.createElement("p");
-            paragraph.textContent = paragraphText;
-            body.append(paragraph);
-          });
-
-          const deleteRow = document.createElement("div");
-          deleteRow.className = "post-delete-row";
-
-          const deleteButton = document.createElement("button");
-          deleteButton.className = "delete-button";
-          deleteButton.type = "button";
-          deleteButton.textContent = "Delete note";
-
-          const deleteStatus = document.createElement("span");
-          deleteStatus.className = "delete-status";
-          deleteStatus.setAttribute("role", "status");
-
-          deleteButton.addEventListener("click", async () => {
-            if (!window.confirm(`Delete “${post.title}”? This cannot be undone.`)) return;
-
-            const formKey = postForm.elements.publishKey.value;
-            const key = formKey || window.prompt("Enter your publish key to delete this note:");
-            if (key === null) return;
-
-            deleteButton.disabled = true;
-            deleteStatus.textContent = "Deleting…";
-
-            try {
-              const response = await fetch(`/api/posts/${post.id}`, {
-                method: "DELETE",
-                headers: { "x-blog-key": key },
-              });
-
-              if (!response.ok) {
-                const result = await response.json();
-                throw new Error(result.error);
-              }
-
-              await loadPosts();
-            } catch (error) {
-              deleteStatus.textContent = error.message || "Could not delete the note.";
-              deleteButton.disabled = false;
-            }
-          });
-
-          deleteRow.append(deleteButton, deleteStatus);
-          body.append(deleteRow);
-
-          summary.append(number, title, meta, action);
-          details.append(summary, body);
-          postList.append(details);
-        });
-      }
-
-      async function loadPosts() {
-        try {
-          const response = await fetch("/api/posts");
-          if (!response.ok) throw new Error("Could not load field notes.");
-          renderPosts(await response.json());
-        } catch (error) {
-          postList.innerHTML = '<p class="blog-empty">Field notes are unavailable right now.</p>';
-        }
-      }
-
-      postForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const button = postForm.querySelector("button");
-        const data = new FormData(postForm);
-        button.disabled = true;
-        formStatus.textContent = "Publishing…";
-
-        try {
-          const response = await fetch("/api/posts", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-blog-key": data.get("publishKey"),
-            },
-            body: JSON.stringify({
-              title: data.get("title"),
-              category: data.get("category"),
-              content: data.get("content"),
-            }),
-          });
-          const result = await response.json();
-          if (!response.ok) throw new Error(result.error);
-
-          postForm.reset();
-          formStatus.textContent = "Published.";
-          await loadPosts();
-        } catch (error) {
-          formStatus.textContent = error.message || "Could not publish the note.";
-        } finally {
-          button.disabled = false;
-        }
-      });
-
-      loadPosts();
-
-      const liveStatus = document.getElementById("live-status");
-      const statusText = document.getElementById("status-text");
-
-      try {
-        const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-        const socket = new WebSocket(`${protocol}://${window.location.host}/live`);
-
-        socket.addEventListener("open", () => liveStatus.classList.add("connected"));
-        socket.addEventListener("message", (event) => {
-          if (event.data.startsWith("Current visitors:")) {
-            const count = event.data.split(":")[1].trim();
-            statusText.textContent = `${count} ${count === "1" ? "visitor" : "visitors"} online`;
-          }
-        });
-        socket.addEventListener("close", () => liveStatus.classList.remove("connected"));
-      } catch (error) {
-        console.info("Live visitor status unavailable.", error);
-      }
-    </script>
+    <script src="/assets/site.js" defer></script>
   </body>
 </html>

@@ -1,0 +1,8 @@
+node_modules
+.git
+.env
+.env.*
+blog.db
+blog.db-shm
+blog.db-wal
+npm-debug.log
