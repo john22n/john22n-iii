@@ -9,9 +9,32 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 const adminKey = process.env.BLOG_ADMIN_KEY || '';
+const adminSessionDuration = 8 * 60 * 60 * 1000;
 
 if (isProduction && !adminKey) {
   throw new Error('BLOG_ADMIN_KEY is required when NODE_ENV=production.');
+}
+
+function createAdminSessionToken() {
+  const expiresAt = Date.now() + adminSessionDuration;
+  const signature = crypto
+    .createHmac('sha256', adminKey)
+    .update(`blog-admin-session-v1:${expiresAt}`)
+    .digest('hex');
+  return `${expiresAt}.${signature}`;
+}
+
+function hasValidAdminSession(token) {
+  const [expiresAt, suppliedSignature] = token.split('.');
+  if (!/^\d+$/.test(expiresAt) || Number(expiresAt) <= Date.now() || !suppliedSignature) return false;
+
+  const expectedSignature = crypto
+    .createHmac('sha256', adminKey)
+    .update(`blog-admin-session-v1:${expiresAt}`)
+    .digest('hex');
+  const expected = Buffer.from(expectedSignature);
+  const supplied = Buffer.from(suppliedSignature);
+  return expected.length === supplied.length && crypto.timingSafeEqual(expected, supplied);
 }
 
 app.disable('x-powered-by');
@@ -233,8 +256,34 @@ const adminLimiter = rateLimit({
   message: { error: 'Too many publishing attempts. Try again later.' },
 });
 
+const adminLoginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { error: 'Too many sign-in attempts. Try again later.' },
+});
+
 function requireAdmin(req, res, next) {
-  const suppliedKey = req.get('x-blog-key');
+  let suppliedKey = req.get('x-blog-key') || '';
+  const authorization = req.get('authorization') || '';
+  const sessionCookie = (req.get('cookie') || '')
+    .split(';')
+    .map((cookie) => cookie.trim().split('='))
+    .find(([name]) => name === 'blog_admin')?.[1] || '';
+
+  if (!suppliedKey && authorization.startsWith('Basic ')) {
+    try {
+      const credentials = Buffer.from(authorization.slice(6), 'base64').toString('utf8');
+      const separator = credentials.indexOf(':');
+      const username = credentials.slice(0, separator);
+      if (separator > -1 && username === 'admin') {
+        suppliedKey = credentials.slice(separator + 1);
+      }
+    } catch {
+      suppliedKey = '';
+    }
+  }
 
   if (!adminKey) {
     return res.status(503).json({ error: 'Publishing is not configured.' });
@@ -242,13 +291,30 @@ function requireAdmin(req, res, next) {
 
   const expected = Buffer.from(adminKey);
   const supplied = Buffer.from(suppliedKey || '');
-  if (expected.length !== supplied.length || !crypto.timingSafeEqual(expected, supplied)) {
+  const hasValidKey = expected.length === supplied.length && crypto.timingSafeEqual(expected, supplied);
+  const hasValidSession = hasValidAdminSession(sessionCookie);
+
+  if (!hasValidKey && !hasValidSession) {
+    if (req.path === '/admin') {
+      res.setHeader('WWW-Authenticate', 'Basic realm="Blog admin", charset="UTF-8"');
+    }
     return res.status(401).json({ error: 'Authentication failed.' });
   }
 
   res.setHeader('Cache-Control', 'no-store');
   next();
 }
+
+app.get('/admin', adminLoginLimiter, requireAdmin, function(req, res) {
+  res.cookie('blog_admin', createAdminSessionToken(), {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: isProduction,
+    maxAge: adminSessionDuration,
+    path: '/api',
+  });
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
 
 app.post('/api/posts', adminLimiter, requireAdmin, function(req, res) {
   const title = typeof req.body.title === 'string' ? req.body.title.trim() : '';

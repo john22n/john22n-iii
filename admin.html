@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Private publishing workspace for John Noriega's engineering field notes." />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="theme-color" content="#171714" />
+    <title>Field Notes Control Room — John Noriega</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/admin.css" />
+  </head>
+  <body>
+    <header class="admin-header">
+      <a class="brand" href="/" title="Return to portfolio">JN<span>/</span></a>
+      <div class="environment">
+        <span class="environment-dot" aria-hidden="true"></span>
+        Private workspace
+      </div>
+    </header>
+
+    <main>
+      <section class="intro">
+        <p class="eyebrow">Publishing console / authenticated</p>
+        <h1>Field notes<br /><span>control room.</span></h1>
+        <p class="lede">Draft, publish, and remove writing from one private workspace. Changes appear on the public portfolio immediately.</p>
+      </section>
+
+      <section class="workspace" aria-labelledby="compose-heading">
+        <div class="section-label">
+          <span>01</span>
+          <h2 id="compose-heading">Compose</h2>
+        </div>
+
+        <form id="post-form" class="post-form">
+          <label>
+            Title
+            <input name="title" maxlength="120" autocomplete="off" required />
+          </label>
+          <label>
+            Category
+            <input name="category" maxlength="40" autocomplete="off" placeholder="Engineering" required />
+          </label>
+          <label class="content-field">
+            Field note
+            <textarea name="content" maxlength="20000" placeholder="Write the first paragraph. Leave a blank line between paragraphs." required></textarea>
+          </label>
+          <div class="form-footer">
+            <p id="form-status" class="status" role="status" aria-live="polite">Ready to publish.</p>
+            <button type="submit">Publish note <span aria-hidden="true">↗</span></button>
+          </div>
+        </form>
+      </section>
+
+      <section class="workspace notes-workspace" aria-labelledby="notes-heading">
+        <div class="section-label">
+          <span>02</span>
+          <h2 id="notes-heading">Published</h2>
+        </div>
+        <div id="post-list" class="post-list" aria-live="polite">
+          <p class="empty-state">Loading field notes…</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Protected by HTTP Basic authentication</span>
+      <a href="/">View public portfolio ↗</a>
+    </footer>
+
+    <script src="/assets/admin.js" defer></script>
+  </body>
+</html>

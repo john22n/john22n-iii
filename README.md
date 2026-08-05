@@ -40,7 +40,14 @@ The test suite starts the real HTTP server against an isolated temporary SQLite 
 
 ## Publishing
 
-Authoring controls are intentionally absent from the public site. Generate an admin key, provide it to the service, and publish through the authenticated API or a private client:
+Authoring controls are intentionally absent from the public portfolio. After configuring an admin key, open `/admin` and sign in through the browser's authentication prompt:
+
+- Username: `admin`
+- Password: the value of `BLOG_ADMIN_KEY`
+
+The private workspace can publish and delete field notes. It is marked `noindex`, omitted from public navigation, protected on the server, and served with `Cache-Control: no-store`.
+
+You can also publish through the authenticated API:
 
 ```sh
 export BLOG_ADMIN_KEY="$(openssl rand -hex 32)"

@@ -10,6 +10,7 @@ process.env.BLOG_ADMIN_KEY = 'test-admin-key';
 
 const { db, server, wss } = require('./index-ws');
 let baseUrl;
+const basicAdminHeader = `Basic ${Buffer.from('admin:test-admin-key').toString('base64')}`;
 
 before(async () => {
   await new Promise((resolve, reject) => {
@@ -46,6 +47,19 @@ test('portfolio and resume are publicly available', async () => {
   assert.equal(resume.status, 200);
   assert.equal(resume.headers.get('content-type'), 'application/pdf');
   assert.ok((await resume.arrayBuffer()).byteLength > 0);
+});
+
+test('admin page requires HTTP Basic authentication', async () => {
+  const unauthorized = await fetch(`${baseUrl}/admin`);
+  assert.equal(unauthorized.status, 401);
+  assert.match(unauthorized.headers.get('www-authenticate'), /^Basic /);
+
+  const authorized = await fetch(`${baseUrl}/admin`, {
+    headers: { authorization: basicAdminHeader },
+  });
+  assert.equal(authorized.status, 200);
+  assert.match(authorized.headers.get('set-cookie'), /blog_admin=.*HttpOnly.*SameSite=Strict/);
+  assert.match(await authorized.text(), /Field Notes Control Room/);
 });
 
 test('public post reads return the starter posts', async () => {
@@ -95,6 +109,33 @@ test('an administrator can publish and delete a post', async () => {
 
   const postsAfterDelete = await (await fetch(`${baseUrl}/api/posts`)).json();
   assert.ok(!postsAfterDelete.some(({ id }) => id === post.id));
+});
+
+test('admin browser session can publish and delete a post', async () => {
+  const adminPage = await fetch(`${baseUrl}/admin`, {
+    headers: { authorization: basicAdminHeader },
+  });
+  const sessionCookie = adminPage.headers.get('set-cookie').split(';', 1)[0];
+  const invalidSession = await fetch(`${baseUrl}/api/posts`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', cookie: sessionCookie.replace(/\d+/, '0') },
+    body: JSON.stringify({ title: 'Invalid session', category: 'Testing', content: 'Test body' }),
+  });
+  assert.equal(invalidSession.status, 401);
+
+  const published = await fetch(`${baseUrl}/api/posts`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', cookie: sessionCookie },
+    body: JSON.stringify({ title: 'Admin page post', category: 'Testing', content: 'Test body' }),
+  });
+  const post = await published.json();
+  assert.equal(published.status, 201);
+
+  const deleted = await fetch(`${baseUrl}/api/posts/${post.id}`, {
+    method: 'DELETE',
+    headers: { cookie: sessionCookie },
+  });
+  assert.equal(deleted.status, 204);
 });
 
 test('deleting rejects an invalid post ID', async () => {
