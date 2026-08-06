@@ -264,40 +264,70 @@ h1 span {
   position: relative;
   min-height: 100%;
   border-left: 1px solid var(--line);
-  background: var(--acid);
+  background: var(--ink);
   overflow: hidden;
 }
 
 .hero-art::before {
   position: absolute;
-  top: 9%;
-  right: -41%;
-  width: 119%;
-  aspect-ratio: 1;
-  border: clamp(45px, 7vw, 100px) solid var(--ink);
-  border-radius: 50%;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(23, 23, 20, 0.06) 45%, rgba(23, 23, 20, 0.7) 100%),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(25% - 1px), rgba(217, 255, 67, 0.13) 25%);
+  pointer-events: none;
   content: "";
 }
 
 .hero-art::after {
   position: absolute;
-  right: 13%;
-  bottom: 9%;
-  width: 33%;
-  aspect-ratio: 1;
-  background: var(--orange);
-  transform: rotate(15deg);
-  box-shadow: 1.6rem 1.6rem 0 var(--paper);
+  z-index: 2;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-top: 1px solid var(--acid);
+  border-right: 1px solid var(--acid);
   content: "";
+}
+
+.hero-art img {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+  object-position: 50% 50%;
+  filter: saturate(0.86) contrast(1.08);
+  transform: scale(1.01);
+  transition: filter 700ms ease, transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hero:hover .hero-art img {
+  filter: saturate(1) contrast(1.03);
+  transform: scale(1.035);
+}
+
+.art-coordinate {
+  position: absolute;
+  z-index: 3;
+  top: 1.5rem;
+  left: 1.5rem;
+  color: var(--acid);
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .vertical-type {
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   bottom: 2rem;
   left: 1.5rem;
+  color: var(--paper);
   font-family: var(--mono);
   font-size: 0.68rem;
+  text-shadow: 0 1px 1rem rgba(23, 23, 20, 0.8);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   writing-mode: vertical-rl;
@@ -617,27 +647,16 @@ h2 {
   overflow: hidden;
 }
 
-.contact::after {
-  position: absolute;
-  right: -5vw;
-  bottom: -22vw;
-  width: 43vw;
-  aspect-ratio: 1;
-  border: 6vw solid var(--acid);
-  border-radius: 50%;
-  content: "";
-}
-
 .contact .section-heading {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .contact-links {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: grid;
-  max-width: 58rem;
+  max-width: min(58rem, 58vw);
   border-top: 1px solid var(--ink);
 }
 
@@ -669,8 +688,8 @@ h2 {
 
 .contact-note {
   position: relative;
-  z-index: 1;
-  max-width: 50rem;
+  z-index: 2;
+  max-width: min(50rem, 58vw);
   margin: 0 0 3rem;
   font-size: clamp(1.2rem, 2vw, 1.75rem);
   line-height: 1.45;
@@ -678,6 +697,34 @@ h2 {
 
 .contact-link:hover span {
   transform: translate(0.35rem, -0.35rem);
+}
+
+.contact-art {
+  position: absolute;
+  z-index: 1;
+  right: -4vw;
+  bottom: -5vw;
+  width: clamp(23rem, 36vw, 42rem);
+  aspect-ratio: 1;
+  border: clamp(0.65rem, 1vw, 1rem) solid var(--acid);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+  overflow: hidden;
+}
+
+.contact-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) contrast(1.04);
+  transform: scale(1.02);
+  transition: filter 700ms ease, transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.contact:hover .contact-art img {
+  filter: saturate(1) contrast(1);
+  transform: scale(1.055);
 }
 
 footer {
@@ -741,6 +788,12 @@ footer {
     border-left: 0;
   }
 
+  .hero-art img {
+    position: absolute;
+    inset: 0;
+    object-position: 50% 44%;
+  }
+
   .section-heading {
     grid-template-columns: 1fr;
     margin-bottom: 3rem;
@@ -787,6 +840,20 @@ footer {
   .post-summary,
   .post:first-child .post-summary {
     min-height: 22rem;
+  }
+
+  .contact-note,
+  .contact-links {
+    max-width: none;
+  }
+
+  .contact-art {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: min(92vw, 30rem);
+    margin: 4rem auto -2rem;
+    border-width: 0.6rem;
   }
 
   footer {
