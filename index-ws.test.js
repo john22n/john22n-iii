@@ -62,6 +62,48 @@ test('admin page requires HTTP Basic authentication', async () => {
   assert.match(await authorized.text(), /Field Notes Control Room/);
 });
 
+test('admin visitor metrics count unique hashed IPs and repeat visits', async () => {
+  const unauthorized = await fetch(`${baseUrl}/api/metrics/visitors`);
+  assert.equal(unauthorized.status, 401);
+
+  const before = await fetch(`${baseUrl}/api/metrics/visitors`, {
+    headers: { authorization: basicAdminHeader },
+  }).then((response) => response.json());
+
+  await fetch(baseUrl, { headers: { 'x-forwarded-for': '198.51.100.10' } });
+  await fetch(baseUrl, { headers: { 'x-forwarded-for': '198.51.100.10' } });
+  await fetch(baseUrl, { headers: { 'x-forwarded-for': '203.0.113.20' } });
+
+  const response = await fetch(`${baseUrl}/api/metrics/visitors`, {
+    headers: { authorization: basicAdminHeader },
+  });
+  const metrics = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.equal(metrics.unique_visitors, before.unique_visitors + 2);
+  assert.equal(metrics.total_visits, before.total_visits + 3);
+  assert.ok(metrics.unique_today >= 2);
+  assert.ok(metrics.unique_last_7_days >= 2);
+});
+
+test('admin visitor metrics count unique resume clicks and repeat clicks', async () => {
+  const before = await fetch(`${baseUrl}/api/metrics/visitors`, {
+    headers: { authorization: basicAdminHeader },
+  }).then((response) => response.json());
+
+  const eventUrl = `${baseUrl}/api/events/resume-click`;
+  await fetch(eventUrl, { method: 'POST', headers: { 'x-forwarded-for': '192.0.2.10' } });
+  await fetch(eventUrl, { method: 'POST', headers: { 'x-forwarded-for': '192.0.2.10' } });
+  await fetch(eventUrl, { method: 'POST', headers: { 'x-forwarded-for': '192.0.2.20' } });
+
+  const metrics = await fetch(`${baseUrl}/api/metrics/visitors`, {
+    headers: { authorization: basicAdminHeader },
+  }).then((response) => response.json());
+
+  assert.equal(metrics.unique_resume_clickers, before.unique_resume_clickers + 2);
+  assert.equal(metrics.total_resume_clicks, before.total_resume_clicks + 3);
+});
+
 test('public post reads return the starter posts', async () => {
   const response = await fetch(`${baseUrl}/api/posts`);
   const posts = await response.json();

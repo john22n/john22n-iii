@@ -37,6 +37,13 @@ function hasValidAdminSession(token) {
   return expected.length === supplied.length && crypto.timingSafeEqual(expected, supplied);
 }
 
+function hashVisitorIp(ip) {
+  return crypto
+    .createHmac('sha256', adminKey || 'local-development-visitor-metrics')
+    .update(ip)
+    .digest('hex');
+}
+
 app.disable('x-powered-by');
 app.set('trust proxy', 'loopback');
 app.use(helmet({
@@ -74,7 +81,21 @@ app.use('/assets', express.static(path.join(__dirname, 'assets'), {
   maxAge: isProduction ? '1d' : 0,
 }));
 
-app.get('/', function(req, res) {
+app.get('/', async function(req, res) {
+  try {
+    await databaseReady;
+    await new Promise((resolve, reject) => {
+      db.run(`
+        INSERT INTO site_visitors (ip_hash)
+        VALUES (?)
+        ON CONFLICT(ip_hash) DO UPDATE SET
+          last_seen = CURRENT_TIMESTAMP,
+          visit_count = visit_count + 1
+      `, [hashVisitorIp(req.ip)], (error) => error ? reject(error) : resolve());
+    });
+  } catch (error) {
+    console.error('Could not record portfolio visit.');
+  }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
@@ -214,6 +235,26 @@ const databaseReady = new Promise((resolve, reject) => {
     `, (createError) => {
       if (createError) reject(createError);
     });
+    db.run(`
+      CREATE TABLE IF NOT EXISTS site_visitors (
+        ip_hash TEXT PRIMARY KEY,
+        first_seen TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        last_seen TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        visit_count INTEGER NOT NULL DEFAULT 1
+      )
+    `, (createError) => {
+      if (createError) reject(createError);
+    });
+    db.run(`
+      CREATE TABLE IF NOT EXISTS resume_clicks (
+        ip_hash TEXT PRIMARY KEY,
+        first_clicked TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        last_clicked TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        click_count INTEGER NOT NULL DEFAULT 1
+      )
+    `, (createError) => {
+      if (createError) reject(createError);
+    });
     db.get('SELECT COUNT(*) AS count FROM posts', (error, row) => {
       if (error) {
         reject(error);
@@ -246,6 +287,19 @@ app.get('/api/posts', function(req, res) {
 
 app.get('/api/health', function(req, res) {
   res.json({ status: 'ok' });
+});
+
+app.post('/api/events/resume-click', function(req, res) {
+  db.run(`
+    INSERT INTO resume_clicks (ip_hash)
+    VALUES (?)
+    ON CONFLICT(ip_hash) DO UPDATE SET
+      last_clicked = CURRENT_TIMESTAMP,
+      click_count = click_count + 1
+  `, [hashVisitorIp(req.ip)], (error) => {
+    if (error) return res.status(500).json({ error: 'Could not record resume click.' });
+    res.status(204).end();
+  });
 });
 
 const adminLimiter = rateLimit({
@@ -314,6 +368,21 @@ app.get('/admin', adminLoginLimiter, requireAdmin, function(req, res) {
     path: '/api',
   });
   res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.get('/api/metrics/visitors', requireAdmin, function(req, res) {
+  db.get(`
+    SELECT
+      (SELECT COUNT(*) FROM site_visitors) AS unique_visitors,
+      (SELECT COALESCE(SUM(visit_count), 0) FROM site_visitors) AS total_visits,
+      (SELECT COUNT(*) FROM site_visitors WHERE DATE(last_seen) = DATE('now')) AS unique_today,
+      (SELECT COUNT(*) FROM site_visitors WHERE last_seen >= DATETIME('now', '-7 days')) AS unique_last_7_days,
+      (SELECT COUNT(*) FROM resume_clicks) AS unique_resume_clickers,
+      (SELECT COALESCE(SUM(click_count), 0) FROM resume_clicks) AS total_resume_clicks
+  `, (error, metrics) => {
+    if (error) return res.status(500).json({ error: 'Could not load visitor metrics.' });
+    res.json(metrics);
+  });
 });
 
 app.post('/api/posts', adminLimiter, requireAdmin, function(req, res) {

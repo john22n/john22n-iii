@@ -14,6 +14,12 @@ const observer = new IntersectionObserver(
 
 document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
 
+document.querySelectorAll('a[href="/assets/john-noriega-resume.pdf"]').forEach((link) => {
+  link.addEventListener("click", () => {
+    fetch("/api/events/resume-click", { method: "POST", keepalive: true }).catch(() => {});
+  });
+});
+
 const postList = document.getElementById("blog-posts");
 
 function renderPosts(posts) {

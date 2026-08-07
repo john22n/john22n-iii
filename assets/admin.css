@@ -52,6 +52,7 @@ h1 span {
 label,
 .status,
 .post-meta,
+.metric-card span,
 .empty-state,
 footer {
   font-family: var(--mono);
@@ -129,6 +130,47 @@ h1 {
 .section-label h2 {
   margin: 0;
   font: inherit;
+}
+
+.metrics-workspace {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.metrics-workspace .section-label {
+  border-color: var(--ink);
+}
+
+.metrics-workspace .section-label span {
+  color: var(--orange-dark);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+
+.metric-grid .empty-state {
+  grid-column: 1 / -1;
+  padding: 2rem;
+  border-right: 1px solid var(--ink);
+}
+
+.metric-card {
+  display: grid;
+  gap: 0.75rem;
+  padding: clamp(1rem, 2vw, 2rem);
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.metric-card strong {
+  font-size: clamp(2rem, 4vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.06em;
 }
 
 .post-form {
@@ -299,6 +341,10 @@ footer a {
 
   .post-form {
     grid-template-columns: 1fr;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .content-field,

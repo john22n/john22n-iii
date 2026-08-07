@@ -1,6 +1,7 @@
 const postForm = document.getElementById("post-form");
 const formStatus = document.getElementById("form-status");
 const postList = document.getElementById("post-list");
+const visitorMetrics = document.getElementById("visitor-metrics");
 
 function formatDate(value) {
   const date = new Date(`${value}Z`);
@@ -79,6 +80,39 @@ async function loadPosts() {
   }
 }
 
+async function loadVisitorMetrics() {
+  try {
+    const response = await fetch("/api/metrics/visitors", { credentials: "same-origin" });
+    if (!response.ok) throw new Error("Could not load visitor metrics.");
+    const metrics = await response.json();
+    const cards = [
+      ["Today", metrics.unique_today],
+      ["Last 7 days", metrics.unique_last_7_days],
+      ["All-time unique", metrics.unique_visitors],
+      ["Total visits", metrics.total_visits],
+      ["Unique résumé clicks", metrics.unique_resume_clickers],
+      ["Total résumé clicks", metrics.total_resume_clicks],
+    ];
+
+    visitorMetrics.replaceChildren(...cards.map(([label, value]) => {
+      const card = document.createElement("div");
+      card.className = "metric-card";
+      const count = document.createElement("strong");
+      count.textContent = Number(value).toLocaleString("en-US");
+      const description = document.createElement("span");
+      description.textContent = label;
+      card.append(count, description);
+      return card;
+    }));
+  } catch (error) {
+    visitorMetrics.replaceChildren();
+    const message = document.createElement("p");
+    message.className = "empty-state";
+    message.textContent = error.message || "Could not load visitor metrics.";
+    visitorMetrics.append(message);
+  }
+}
+
 postForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const button = postForm.querySelector('button[type="submit"]');
@@ -112,3 +146,4 @@ postForm.addEventListener("submit", async (event) => {
 });
 
 loadPosts();
+loadVisitorMetrics();
