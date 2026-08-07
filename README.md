@@ -70,4 +70,10 @@ Production startup fails closed when `BLOG_ADMIN_KEY` is missing:
 NODE_ENV=production BLOG_ADMIN_KEY="your-generated-secret" npm start
 ```
 
+The VPS deployment script reads secrets from `.env` beside `github.sh` and passes them into the container with Docker's `--env-file` option. If the file is stored elsewhere, provide its path explicitly:
+
+```sh
+sudo ENV_FILE=/path/to/.env ./github.sh
+```
+
 Terminate TLS at a reverse proxy, redirect HTTP to HTTPS, and expose only ports 80 and 443. Keep port 3000 and `blog.db` private. Store the admin key in the deployment environment rather than this repository or shell history.

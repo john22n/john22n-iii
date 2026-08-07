@@ -2,14 +2,27 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 IMAGE="${IMAGE:-ghcr.io/john22n/john22n-iii:latest}"
 CONTAINER="${CONTAINER:-john22n-iii}"
 HOST_PORT="${HOST_PORT:-3000}"
 DATA_DIR="${DATA_DIR:-/var/lib/john22n-iii}"
 DB_PATH="${DATA_DIR}/blog.db"
+ENV_FILE="${ENV_FILE:-${SCRIPT_DIR}/.env}"
 
 if ! docker info >/dev/null 2>&1; then
   echo "Cannot connect to Docker. Run this script with sudo." >&2
+  exit 1
+fi
+
+if [[ ! -f "$ENV_FILE" ]]; then
+  echo "Environment file not found: ${ENV_FILE}" >&2
+  echo "Set ENV_FILE if the VPS .env is stored elsewhere." >&2
+  exit 1
+fi
+
+if ! grep -Eq '^BLOG_ADMIN_KEY=.+$' "$ENV_FILE"; then
+  echo "BLOG_ADMIN_KEY is missing or empty in ${ENV_FILE}." >&2
   exit 1
 fi
 
@@ -39,6 +52,8 @@ docker run -d \
   --name "$CONTAINER" \
   --restart unless-stopped \
   -p "${HOST_PORT}:3000" \
+  --env-file "$ENV_FILE" \
+  -e NODE_ENV=production \
   -e BLOG_DB_PATH=/data/blog.db \
   -v "${DATA_DIR}:/data" \
   "$IMAGE"
