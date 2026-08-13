@@ -2,12 +2,39 @@ const postForm = document.getElementById("post-form");
 const formStatus = document.getElementById("form-status");
 const postList = document.getElementById("post-list");
 const visitorMetrics = document.getElementById("visitor-metrics");
+const resumeForm = document.getElementById("resume-form");
+const resumeFile = document.getElementById("resume-file");
+const resumeFileName = document.getElementById("resume-file-name");
+const resumeMeta = document.getElementById("resume-meta");
+const resumeStatus = document.getElementById("resume-status");
 
 function formatDate(value) {
   const date = new Date(`${value}Z`);
   return Number.isNaN(date.getTime())
     ? "Date unavailable"
     : new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(date);
+}
+
+function formatFileSize(bytes) {
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
+function renderResumeDetails(resume) {
+  const updated = new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(resume.updated_at));
+  resumeMeta.textContent = `Updated ${updated} / ${formatFileSize(resume.size)}`;
+}
+
+async function loadResumeDetails() {
+  try {
+    const response = await fetch("/api/resume", { credentials: "same-origin" });
+    if (!response.ok) throw new Error("Could not load résumé details.");
+    renderResumeDetails(await response.json());
+  } catch (error) {
+    resumeMeta.textContent = error.message || "Could not load résumé details.";
+  }
 }
 
 function renderPosts(posts) {
@@ -145,5 +172,41 @@ postForm.addEventListener("submit", async (event) => {
   }
 });
 
+resumeFile.addEventListener("change", () => {
+  const file = resumeFile.files[0];
+  resumeFileName.textContent = file ? file.name : "Drop in a new version";
+});
+
+resumeForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = resumeForm.querySelector('button[type="submit"]');
+  const file = resumeFile.files[0];
+  if (!file) return;
+
+  button.disabled = true;
+  resumeStatus.textContent = "Uploading…";
+
+  try {
+    const response = await fetch("/api/resume", {
+      method: "PUT",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/pdf" },
+      body: file,
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+
+    renderResumeDetails(result);
+    resumeForm.reset();
+    resumeFileName.textContent = "Drop in a new version";
+    resumeStatus.textContent = "Résumé updated. The public link now serves this version.";
+  } catch (error) {
+    resumeStatus.textContent = error.message || "Could not upload the résumé.";
+  } finally {
+    button.disabled = false;
+  }
+});
+
 loadPosts();
 loadVisitorMetrics();
+loadResumeDetails();

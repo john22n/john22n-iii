@@ -28,7 +28,7 @@
       <section class="intro">
         <p class="eyebrow">Publishing console / authenticated</p>
         <h1>Field notes<br /><span>control room.</span></h1>
-        <p class="lede">Draft, publish, and remove writing from one private workspace. Changes appear on the public portfolio immediately.</p>
+        <p class="lede">Manage your résumé and field notes from one private workspace. Changes appear on the public portfolio immediately.</p>
       </section>
 
       <section class="workspace metrics-workspace" aria-labelledby="metrics-heading">
@@ -41,9 +41,35 @@
         </div>
       </section>
 
-      <section class="workspace" aria-labelledby="compose-heading">
+      <section class="workspace resume-workspace" aria-labelledby="resume-heading">
         <div class="section-label">
           <span>02</span>
+          <h2 id="resume-heading">Résumé</h2>
+        </div>
+
+        <form id="resume-form" class="resume-form">
+          <div class="resume-details">
+            <p class="resume-kicker">Public document</p>
+            <h3>Keep your latest work within reach.</h3>
+            <p id="resume-meta" class="resume-meta">Loading current résumé…</p>
+            <a href="/assets/john-noriega-resume.pdf" target="_blank">View current PDF ↗</a>
+          </div>
+          <label class="file-drop" for="resume-file">
+            <span class="file-drop-action">Choose PDF</span>
+            <strong id="resume-file-name">Drop in a new version</strong>
+            <span>PDF only · 10 MB maximum</span>
+            <input id="resume-file" name="resume" type="file" accept="application/pdf,.pdf" required />
+          </label>
+          <div class="form-footer resume-footer">
+            <p id="resume-status" class="status" role="status" aria-live="polite">Ready for a new version.</p>
+            <button type="submit">Upload résumé <span aria-hidden="true">↗</span></button>
+          </div>
+        </form>
+      </section>
+
+      <section class="workspace" aria-labelledby="compose-heading">
+        <div class="section-label">
+          <span>03</span>
           <h2 id="compose-heading">Compose</h2>
         </div>
 
@@ -69,7 +95,7 @@
 
       <section class="workspace notes-workspace" aria-labelledby="notes-heading">
         <div class="section-label">
-          <span>03</span>
+          <span>04</span>
           <h2 id="notes-heading">Published</h2>
         </div>
         <div id="post-list" class="post-list" aria-live="polite">

@@ -7,6 +7,7 @@ const path = require('node:path');
 const temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'portfolio-blog-'));
 process.env.BLOG_DB_PATH = path.join(temporaryDirectory, 'test.db');
 process.env.BLOG_ADMIN_KEY = 'test-admin-key';
+process.env.RESUME_PATH = path.join(temporaryDirectory, 'john-noriega-resume.pdf');
 
 const { db, server, wss } = require('./index-ws');
 let baseUrl;
@@ -178,6 +179,37 @@ test('admin browser session can publish and delete a post', async () => {
     headers: { cookie: sessionCookie },
   });
   assert.equal(deleted.status, 204);
+});
+
+test('an administrator can upload a new résumé version', async () => {
+  const unauthorized = await fetch(`${baseUrl}/api/resume`);
+  assert.equal(unauthorized.status, 401);
+
+  const adminPage = await fetch(`${baseUrl}/admin`, {
+    headers: { authorization: basicAdminHeader },
+  });
+  const sessionCookie = adminPage.headers.get('set-cookie').split(';', 1)[0];
+  const invalid = await fetch(`${baseUrl}/api/resume`, {
+    method: 'PUT',
+    headers: { 'content-type': 'application/pdf', cookie: sessionCookie },
+    body: 'not a PDF',
+  });
+  assert.equal(invalid.status, 400);
+
+  const pdf = Buffer.from('%PDF-1.7\nA replacement résumé\n%%EOF');
+  const uploaded = await fetch(`${baseUrl}/api/resume`, {
+    method: 'PUT',
+    headers: { 'content-type': 'application/pdf', cookie: sessionCookie },
+    body: pdf,
+  });
+  const details = await uploaded.json();
+  assert.equal(uploaded.status, 200);
+  assert.equal(details.size, pdf.length);
+  assert.ok(Date.parse(details.updated_at));
+
+  const resume = await fetch(`${baseUrl}/assets/john-noriega-resume.pdf`);
+  assert.equal(resume.headers.get('cache-control'), 'no-cache');
+  assert.deepEqual(Buffer.from(await resume.arrayBuffer()), pdf);
 });
 
 test('deleting rejects an invalid post ID', async () => {

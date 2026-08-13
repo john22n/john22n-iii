@@ -55,6 +55,7 @@ docker run -d \
   --env-file "$ENV_FILE" \
   -e NODE_ENV=production \
   -e BLOG_DB_PATH=/data/blog.db \
+  -e RESUME_PATH=/data/john-noriega-resume.pdf \
   -v "${DATA_DIR}:/data" \
   "$IMAGE"
 

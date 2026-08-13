@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const crypto = require('crypto');
+const fs = require('fs');
 const path = require('path');
 const helmet = require('helmet');
 const { rateLimit } = require('express-rate-limit');
@@ -10,6 +11,13 @@ const PORT = Number(process.env.PORT) || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 const adminKey = process.env.BLOG_ADMIN_KEY || '';
 const adminSessionDuration = 8 * 60 * 60 * 1000;
+const bundledResumePath = path.join(__dirname, 'assets', 'john-noriega-resume.pdf');
+const resumePath = process.env.RESUME_PATH || bundledResumePath;
+
+if (!fs.existsSync(resumePath)) {
+  fs.mkdirSync(path.dirname(resumePath), { recursive: true });
+  fs.copyFileSync(bundledResumePath, resumePath);
+}
 
 if (isProduction && !adminKey) {
   throw new Error('BLOG_ADMIN_KEY is required when NODE_ENV=production.');
@@ -76,6 +84,10 @@ app.use(rateLimit({
 }));
 
 app.use(express.json({ limit: '100kb' }));
+app.get('/assets/john-noriega-resume.pdf', function(req, res) {
+  res.setHeader('Cache-Control', 'no-cache');
+  res.sendFile(resumePath);
+});
 app.use('/assets', express.static(path.join(__dirname, 'assets'), {
   fallthrough: false,
   maxAge: isProduction ? '1d' : 0,
@@ -385,6 +397,43 @@ app.get('/api/metrics/visitors', requireAdmin, function(req, res) {
   });
 });
 
+app.get('/api/resume', requireAdmin, function(req, res, next) {
+  fs.stat(resumePath, (error, stats) => {
+    if (error) return next(error);
+    res.json({
+      size: stats.size,
+      updated_at: stats.mtime.toISOString(),
+    });
+  });
+});
+
+app.put(
+  '/api/resume',
+  adminLimiter,
+  requireAdmin,
+  express.raw({ type: 'application/pdf', limit: '10mb' }),
+  async function(req, res) {
+    if (!Buffer.isBuffer(req.body) || req.body.length === 0) {
+      return res.status(400).json({ error: 'Choose a PDF résumé to upload.' });
+    }
+    if (req.body.subarray(0, 5).toString() !== '%PDF-') {
+      return res.status(400).json({ error: 'The uploaded file is not a valid PDF.' });
+    }
+
+    const temporaryPath = `${resumePath}.${crypto.randomUUID()}.tmp`;
+    try {
+      await fs.promises.writeFile(temporaryPath, req.body, { mode: 0o644 });
+      await fs.promises.rename(temporaryPath, resumePath);
+      const stats = await fs.promises.stat(resumePath);
+      res.json({ size: stats.size, updated_at: stats.mtime.toISOString() });
+    } catch (error) {
+      await fs.promises.rm(temporaryPath, { force: true }).catch(() => {});
+      console.error('Could not replace the résumé.', error);
+      res.status(500).json({ error: 'Could not replace the résumé.' });
+    }
+  }
+);
+
 app.post('/api/posts', adminLimiter, requireAdmin, function(req, res) {
   const title = typeof req.body.title === 'string' ? req.body.title.trim() : '';
   const category = typeof req.body.category === 'string' ? req.body.category.trim() : '';
@@ -427,6 +476,13 @@ app.delete('/api/posts/:id', adminLimiter, requireAdmin, function(req, res) {
     if (this.changes === 0) return res.status(404).json({ error: 'Post not found.' });
     res.status(204).end();
   });
+});
+
+app.use((error, req, res, next) => {
+  if (error.type === 'entity.too.large') {
+    return res.status(413).json({ error: 'The uploaded file must be 10 MB or smaller.' });
+  }
+  next(error);
 });
 
 function shutdownDB() {

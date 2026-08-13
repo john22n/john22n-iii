@@ -45,7 +45,7 @@ Authoring controls are intentionally absent from the public portfolio. After con
 - Username: `admin`
 - Password: the value of `BLOG_ADMIN_KEY`
 
-The private workspace can publish and delete field notes. It is marked `noindex`, omitted from public navigation, protected on the server, and served with `Cache-Control: no-store`.
+The private workspace can upload a replacement PDF résumé and publish or delete field notes. Résumé uploads replace the public file immediately and are limited to 10 MB. The workspace is marked `noindex`, omitted from public navigation, protected on the server, and served with `Cache-Control: no-store`.
 
 You can also publish through the authenticated API:
 
@@ -70,7 +70,7 @@ Production startup fails closed when `BLOG_ADMIN_KEY` is missing:
 NODE_ENV=production BLOG_ADMIN_KEY="your-generated-secret" npm start
 ```
 
-The VPS deployment script reads secrets from `.env` beside `github.sh` and passes them into the container with Docker's `--env-file` option. If the file is stored elsewhere, provide its path explicitly:
+The VPS deployment script reads secrets from `.env` beside `github.sh` and passes them into the container with Docker's `--env-file` option. The database and uploaded résumé are persisted in `/var/lib/john22n-iii` by default, so both survive container replacement. If the environment file is stored elsewhere, provide its path explicitly:
 
 ```sh
 sudo ENV_FILE=/path/to/.env ./github.sh

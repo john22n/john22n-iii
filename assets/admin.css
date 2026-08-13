@@ -180,6 +180,124 @@ h1 {
   border-left: 1px solid var(--paper);
 }
 
+.resume-workspace {
+  background: var(--orange);
+  color: var(--ink);
+}
+
+.resume-workspace .section-label {
+  border-color: var(--ink);
+}
+
+.resume-workspace .section-label span {
+  color: var(--paper);
+}
+
+.resume-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+
+.resume-details {
+  padding: clamp(1.5rem, 3vw, 3rem);
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.resume-kicker,
+.resume-meta,
+.resume-details a,
+.file-drop span {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-kicker {
+  margin: 0 0 3rem;
+}
+
+.resume-details h3 {
+  max-width: 16ch;
+  margin: 0 0 2.5rem;
+  font-size: clamp(2rem, 4vw, 4.2rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.065em;
+}
+
+.resume-meta {
+  margin: 0 0 0.75rem;
+}
+
+.resume-details a {
+  font-weight: 500;
+  text-underline-offset: 0.3rem;
+}
+
+.file-drop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 22rem;
+  padding: 2rem;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  text-align: center;
+  cursor: pointer;
+}
+
+.file-drop:hover,
+.file-drop:focus-within {
+  background: var(--acid);
+}
+
+.file-drop-action {
+  margin-bottom: 1rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--ink);
+}
+
+.file-drop strong {
+  max-width: 18ch;
+  margin-bottom: 0.75rem;
+  overflow-wrap: anywhere;
+  font-size: clamp(1.25rem, 2vw, 2rem);
+  line-height: 1.1;
+}
+
+.file-drop input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.resume-footer {
+  border-color: var(--ink);
+}
+
+.resume-footer .status {
+  color: rgba(23, 23, 20, 0.72);
+}
+
+.resume-footer button {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.resume-footer button:hover,
+.resume-footer button:focus-visible {
+  background: var(--acid);
+  color: var(--ink);
+}
+
 label {
   display: grid;
   gap: 0.75rem;
@@ -340,6 +458,10 @@ footer a {
   }
 
   .post-form {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-form {
     grid-template-columns: 1fr;
   }
 
