@@ -1,5 +1,17 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
+document.addEventListener("keydown", (event) => {
+  const target = event.target;
+  const isEditing = target instanceof HTMLElement
+    && (target.isContentEditable || ["INPUT", "SELECT", "TEXTAREA"].includes(target.tagName));
+
+  if (event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey
+    && event.code === "KeyA" && !event.repeat && !isEditing) {
+    event.preventDefault();
+    window.location.assign("/admin");
+  }
+});
+
 const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {

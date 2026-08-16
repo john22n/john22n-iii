@@ -45,6 +45,8 @@ Authoring controls are intentionally absent from the public portfolio. After con
 - Username: `admin`
 - Password: the value of `BLOG_ADMIN_KEY`
 
+From the public portfolio, press `Alt+A` (`Option+A` on macOS) to open the admin page.
+
 The private workspace can upload a replacement PDF résumé and publish or delete field notes. Résumé uploads replace the public file immediately and are limited to 10 MB. The workspace is marked `noindex`, omitted from public navigation, protected on the server, and served with `Cache-Control: no-store`.
 
 You can also publish through the authenticated API:
