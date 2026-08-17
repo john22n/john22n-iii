@@ -51,7 +51,7 @@ echo "Starting ${CONTAINER}..."
 docker run -d \
   --name "$CONTAINER" \
   --restart unless-stopped \
-  -p "${HOST_PORT}:3000" \
+  -p "127.0.0.1:${HOST_PORT}:3000" \
   --env-file "$ENV_FILE" \
   -e NODE_ENV=production \
   -e BLOG_DB_PATH=/data/blog.db \
