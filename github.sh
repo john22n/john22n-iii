@@ -10,6 +10,14 @@ DATA_DIR="${DATA_DIR:-/var/lib/john22n-iii}"
 DB_PATH="${DATA_DIR}/blog.db"
 ENV_FILE="${ENV_FILE:-${SCRIPT_DIR}/.env}"
 
+# Hold the lock through the pull, replacement, and health check.
+mkdir -p "$DATA_DIR"
+exec 9>"${DATA_DIR}/deploy.lock"
+if ! flock -n 9; then
+  echo "Another deployment is already running; skipping."
+  exit 0
+fi
+
 if ! docker info >/dev/null 2>&1; then
   echo "Cannot connect to Docker. Run this script with sudo." >&2
   exit 1
@@ -28,6 +36,16 @@ fi
 
 echo "Pulling ${IMAGE}..."
 docker pull "$IMAGE"
+IMAGE_ID="$(docker image inspect --format '{{.Id}}' "$IMAGE")"
+
+if docker container inspect "$CONTAINER" >/dev/null 2>&1; then
+  CURRENT_IMAGE="$(docker inspect --format '{{.Image}}' "$CONTAINER")"
+  RUNNING="$(docker inspect --format '{{.State.Running}}' "$CONTAINER")"
+  if [[ "$CURRENT_IMAGE" == "$IMAGE_ID" && "$RUNNING" == "true" ]]; then
+    echo "Published image is already running; no deployment needed."
+    exit 0
+  fi
+fi
 
 install -d -o 1000 -g 1000 -m 750 "$DATA_DIR"
 
@@ -57,7 +75,7 @@ docker run -d \
   -e BLOG_DB_PATH=/data/blog.db \
   -e RESUME_PATH=/data/john-noriega-resume.pdf \
   -v "${DATA_DIR}:/data" \
-  "$IMAGE"
+  "$IMAGE_ID"
 
 echo "Waiting for the application health check..."
 for attempt in {1..15}; do
