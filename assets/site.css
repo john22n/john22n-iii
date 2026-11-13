@@ -747,6 +747,41 @@ footer {
   transform: none;
 }
 
+.work-links {
+  margin: 2rem 0 0;
+  line-height: 1.6;
+}
+
+.case-study {
+  border-top: 1px solid var(--ink);
+  scroll-margin-top: 2rem;
+}
+
+.case-study:nth-child(even) {
+  background: var(--paper);
+}
+
+.case-body {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.1rem;
+  line-height: 1.75;
+}
+
+.case-body h3 {
+  margin-top: 2.5rem;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.case-note {
+  border-left: 3px solid var(--orange);
+  padding-left: 1rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
 @keyframes scroll {
   to { transform: translateX(-50%); }
 }

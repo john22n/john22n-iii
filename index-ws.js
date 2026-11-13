@@ -115,6 +115,18 @@ app.get('/favicon.ico', function(req, res) {
   res.status(204).end();
 });
 
+app.get('/projects', function(req, res) {
+  res.sendFile(path.join(__dirname, 'projects.html'));
+});
+
+app.get('/robots.txt', function(req, res) {
+  res.type('text/plain').send('User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nSitemap: https://john22n-iii.com/sitemap.xml\n');
+});
+
+app.get('/sitemap.xml', function(req, res) {
+  res.type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://john22n-iii.com/</loc></url><url><loc>https://john22n-iii.com/projects</loc></url></urlset>');
+});
+
 app.use((error, req, res, next) => {
   if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
     return res.status(400).json({ error: 'The request body is not valid JSON.' });

@@ -50,6 +50,27 @@ test('portfolio and resume are publicly available', async () => {
   assert.ok((await resume.arrayBuffer()).byteLength > 0);
 });
 
+test('case studies and discovery endpoints expose public pages only', async () => {
+  const projects = await fetch(`${baseUrl}/projects`);
+  assert.equal(projects.status, 200);
+  assert.match(projects.headers.get('content-type'), /text\/html/);
+  const html = await projects.text();
+  for (const id of ['billboard-source-ai', 'billboard-source-voicemail-ai', 'john22n-iii']) {
+    assert.ok(html.includes(`id="${id}"`));
+    assert.ok(html.includes(`https://github.com/john22n/${id}`));
+  }
+  const robots = await fetch(`${baseUrl}/robots.txt`);
+  assert.equal(robots.status, 200);
+  assert.match(await robots.text(), /Sitemap: https:\/\/john22n-iii.com\/sitemap.xml/);
+  const sitemap = await fetch(`${baseUrl}/sitemap.xml`);
+  assert.equal(sitemap.status, 200);
+  assert.match(sitemap.headers.get('content-type'), /application\/xml/);
+  assert.match(await sitemap.text(), /<loc>https:\/\/john22n-iii.com\/projects<\/loc>/);
+  for (const privatePath of ['/portfolio.json', '/brag/inbox/', '/.env']) {
+    assert.equal((await fetch(`${baseUrl}${privatePath}`)).status, 404);
+  }
+});
+
 test('admin page requires HTTP Basic authentication', async () => {
   const unauthorized = await fetch(`${baseUrl}/admin`);
   assert.equal(unauthorized.status, 401);

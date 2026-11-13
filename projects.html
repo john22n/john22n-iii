@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Selected projects — John Noriega</title>
+    <meta name="description" content="Engineering case studies: Billboard Source sales intake, a Python voice agent, and a full-stack portfolio. Implementation, tradeoffs, tests, and outcomes." />
+    <link rel="canonical" href="https://john22n-iii.com/projects" />
+    <meta property="og:title" content="Selected projects — John Noriega" />
+    <meta property="og:description" content="The implementation and decisions behind sales intake, conversational AI, and a full-stack publishing service." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://john22n-iii.com/projects" />
+    <meta property="og:image" content="https://john22n-iii.com/assets/hero-sphere.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/site.css" />
+  </head>
+  <body class="case-studies">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header>
+      <a class="logo" href="/" aria-label="John Noriega, home">JN<span>/</span></a>
+      <nav aria-label="Main navigation"><a href="/#work">Selected work</a><a href="/#contact">Connect</a></nav>
+    </header>
+    <main id="main">
+      <section class="case-intro">
+        <p class="eyebrow">John Noriega / Engineering case studies</p>
+        <h1>Behind the <span>systems.</span></h1>
+        <p class="intro">What I built, why the boundaries matter, and where to inspect the work.</p>
+        <div class="hero-actions"><a class="button-link" href="#billboard-source-ai">Sales platform ↓</a><a class="button-link secondary" href="#billboard-source-voicemail-ai">Voice agent ↓</a><a class="button-link secondary" href="#john22n-iii">Portfolio ↓</a></div>
+      </section>
+      <section class="case-study" id="billboard-source-ai">
+        <div class="section-heading"><span class="section-number">01 / Sales platform</span><h2>From conversation to qualified lead.</h2></div>
+        <div class="case-body">
+          <p class="project-outcome">$2M+ in sales supported since launch.</p>
+          <p>I designed and launched Billboard Source’s AI sales intake and call-routing platform, connecting inbound conversations, transcription, lead qualification, and Nutshell CRM data entry.</p>
+          <h3>My role and the outcome</h3>
+          <p>I began consulting in January 2025 and moved to full-time software engineering in July 2026. The product launched in late January 2026. The $2M+ figure is the cumulative platform sales outcome through November 13, 2026, spanning both roles—not a separate result attributed to the voice agent or a claim of sole credit for the sales.</p>
+          <h3>Implementation and decisions</h3>
+          <p>Next.js and TypeScript provide the application layer; PostgreSQL and Drizzle hold structured records. Twilio connects phone workflows, OpenAI APIs support extraction from conversations, and Nutshell integrates the resulting leads into the sales workflow. Vercel hosts the application.</p>
+          <p>The integrations connect distinct systems rather than hiding everything inside a model conversation. Structured records make the output useful to downstream sales operations, while explicit integration boundaries expose failures that need diagnosis.</p>
+          <h3>Verification</h3>
+          <p>I added GitHub Actions checks for linting, type checks, unit tests, and Playwright browser tests backed by disposable PostgreSQL. Retained failure artifacts support debugging; flaky-test rejection prevents a retry from concealing an unstable test.</p>
+          <div class="hero-actions"><a class="button-link" href="https://github.com/john22n/billboard-source-ai">Source &amp; architecture ↗</a><a class="button-link secondary" href="https://github.com/john22n/billboard-source-ai/actions">CI runs ↗</a></div>
+          <p class="case-note">Production business application. No public demo is offered here; the repository documents the implementation without exposing customer workflows.</p>
+        </div>
+      </section>
+      <section class="case-study" id="billboard-source-voicemail-ai">
+        <div class="section-heading"><span class="section-number">02 / Python voice agent</span><h2>Useful calls. Bounded failure.</h2></div>
+        <div class="case-body">
+          <p>I built a Python conversational voice service using Pipecat, OpenAI, and Twilio Media Streams to capture caller requirements and create Nutshell leads. Parameterized PostgreSQL queries retrieve location data.</p>
+          <h3>Security and operational tradeoffs</h3>
+          <p>I hardened webhooks and WebSocket sessions with Twilio signature validation, per-process concurrency limits, call deadlines, and overflow voicemail. Calls consume finite resources: bounding their lifetime and providing a fallback matters as much as the successful conversation.</p>
+          <p>Per-process limits are deliberately not a distributed quota. Scaling to multiple workers requires accounting for that boundary rather than assuming one process’s counter caps the entire deployment.</p>
+          <h3>Delivery and verification</h3>
+          <p>Non-root Docker containers, health checks, and an Nginx reverse proxy support deployment. OpenTelemetry and Jaeger tracing help diagnose call behavior; automated tests cover rejection and timeout paths.</p>
+          <div class="hero-actions"><a class="button-link" href="https://github.com/john22n/billboard-source-voicemail-ai">Source &amp; operational notes ↗</a><a class="button-link secondary" href="https://github.com/john22n/billboard-source-voicemail-ai/actions">CI runs ↗</a></div>
+          <p class="case-note">No public call demo or separate revenue metric is claimed. Production phone numbers and telephony webhooks are not demo endpoints.</p>
+        </div>
+      </section>
+      <section class="case-study" id="john22n-iii">
+        <div class="section-heading"><span class="section-number">03 / This portfolio</span><h2>A small, complete publishing system.</h2></div>
+        <div class="case-body">
+          <p>This site pairs server-delivered HTML and CSS with a Node.js/Express service, SQLite-backed field notes, and WebSocket support. The homepage is the live demo.</p>
+          <h3>Decisions</h3>
+          <p>Core career and project content is available without client-side rendering. Field notes load through a JSON API; administrative publishing uses authenticated endpoints. SQLite keeps persistence simple for a single-service deployment, with a corresponding need to preserve the database across releases.</p>
+          <h3>Verification</h3>
+          <p>Tests exercise real HTTP requests: public reads, authentication failures, authorized publishing and deletion, visitor metrics, and resume uploads. Security headers, request limits, and signed expiring admin sessions protect the publishing surface.</p>
+          <div class="hero-actions"><a class="button-link" href="/">Open live portfolio ↗</a><a class="button-link secondary" href="https://github.com/john22n/john22n-iii">Source &amp; tests ↗</a></div>
+        </div>
+      </section>
+    </main>
+    <footer><span>John Noriega / Denver, Colorado</span><a href="/#contact">Let’s connect ↗</a></footer>
+  </body>
+</html>
